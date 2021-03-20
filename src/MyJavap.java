@@ -1,9 +1,11 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,7 +21,9 @@ public class MyJavap {
     private JTextArea outputs;
     private JList methodList;
     private JList constructorList;
+
     private File selectedFile;
+    private Object objectUnderTesting;
 
     public MyJavap() {
         JFrame frame = new JFrame();
@@ -63,10 +67,24 @@ public class MyJavap {
                 }
             }
         });
+        instantiateButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(!constructorList.isSelectionEmpty()){
+                    ConstructorWrapper constructor = (ConstructorWrapper) constructorList.getSelectedValue();
+                    objectUnderTesting = constructor.instatiate();
+                }
+            }
+        });
     }
     private void populateConstructorList(Class c){
         Object[] constructors = c.getConstructors();
-        constructorList.setListData(constructors);
+        Object[] wrappedConstructors = new ConstructorWrapper[constructors.length];
+        for(int i = 0; i != constructors.length; i++){
+            wrappedConstructors[i] = new ConstructorWrapper((Constructor)constructors[i]);
+        }
+        constructorList.setListData(wrappedConstructors);
     }
     private void populateMethodList(Class c){
         Object[] methods = c.getDeclaredMethods();

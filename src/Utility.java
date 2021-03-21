@@ -11,6 +11,7 @@ public class Utility {
             case "double": return Double.parseDouble(value);
             case "char": return Character.valueOf(value.charAt(0));
             case "boolean": return Boolean.parseBoolean(value);
+            case "java.lang.String": return value;
             default: throw new IllegalArgumentException("\'"+type + "\' is not a primitive type.");
         }
     }

@@ -6,9 +6,11 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 
 public class MyJavap {
     private JTextField fileChooserTextField;
@@ -76,8 +78,6 @@ public class MyJavap {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                //TODO: Mikayla, place your code for invoking a selected method in here
-                //You may refer to objectUnderTesting variable as the source object. (Make sure it's not null before using tho)
 
                 if(objectUnderTesting == null || methodList.getSelectedValue() == null)
                 {
@@ -121,18 +121,6 @@ public class MyJavap {
 
                 try
                 {
-                    if(objectUnderTesting == null)
-                    {
-                        System.out.println("NULL OBJECT");
-                    }
-                    else if(method == null)
-                    {
-                        System.out.println("NULL METHOD");
-                    }
-                    else if(parameters == null)
-                    {
-                        System.out.println("NULL PARAMS");
-                    }
                     Object o = method.invoke(objectUnderTesting, arguments);
                     //illegal access exceptions, but for now it's buggy
 
@@ -207,6 +195,18 @@ public class MyJavap {
     private void populateMethodList(Class c){
         //TODO: This is placeholder code. Feel free to change it
         Object[] methods = c.getDeclaredMethods();
+        ArrayList<Object> publicMethods = new ArrayList<>();
+        for(int i = 0; i < methods.length; i++)
+        {
+            int modifiers = ((Method)methods[i]).getModifiers();
+            if(Modifier.isPublic(modifiers))
+            {
+                publicMethods.add(methods[i]);
+            }
+        }
+
+        methods = publicMethods.toArray();
+
         methodList.setListData(methods);
     }
 

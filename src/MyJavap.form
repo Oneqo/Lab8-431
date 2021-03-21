@@ -22,7 +22,7 @@
           <text value="Instantiate"/>
         </properties>
       </component>
-      <component id="529ab" class="javax.swing.JLabel" binding="constructorPrompt">
+      <component id="529ab" class="javax.swing.JLabel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -30,7 +30,7 @@
           <text value="Constructors"/>
         </properties>
       </component>
-      <component id="24260" class="javax.swing.JLabel" binding="methodPrompt">
+      <component id="24260" class="javax.swing.JLabel">
         <constraints>
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -87,7 +87,7 @@
           <text value="Execute"/>
         </properties>
       </component>
-      <component id="1c408" class="javax.swing.JLabel" binding="topPrompt">
+      <component id="1c408" class="javax.swing.JLabel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

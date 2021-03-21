@@ -5,6 +5,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -76,6 +78,82 @@ public class MyJavap {
                 super.mouseClicked(e);
                 //TODO: Mikayla, place your code for invoking a selected method in here
                 //You may refer to objectUnderTesting variable as the source object. (Make sure it's not null before using tho)
+
+                if(objectUnderTesting == null || methodList.getSelectedValue() == null)
+                {
+                    //nothing has been selected. do nothing.
+                    return;
+                }
+
+                Method method = (Method) methodList.getSelectedValue();
+                Parameter[] parameters = new Parameter[method.getParameterCount()];
+                parameters = method.getParameters();
+                Object[] arguments = new Object[parameters.length];
+                //get user input for arguments if necessary
+                if(parameters.length != 0)
+                {
+                    for(int i = 0; i < parameters.length; i++)
+                    {
+                        Class parameterType = parameters[i].getType();
+                        try {
+                            if (parameterType.isPrimitive() || parameterType.equals(Class.forName("java.lang.String")))
+                            {
+                                String userInput = (String) JOptionPane.showInputDialog(null, "Please, enter " + parameterType.toString() + i,"Input Dialog Box", JOptionPane.QUESTION_MESSAGE);
+                                try{
+                                    arguments[i] = Utility.getWrappedPrimitive(parameterType.getName(), userInput);
+                                }catch (NumberFormatException exc){
+                                    //Couldn't parse primitive type. Try again
+                                    i--;
+                                }
+                            }
+                            else{
+                                ConstructorDialogBox dialogBox = new ConstructorDialogBox(parameterType);
+                                dialogBox.pack();
+                                dialogBox.setVisible(true);
+                            }
+                        }
+                        catch(ClassNotFoundException exc)
+                        {
+                            exc.printStackTrace();
+                        }
+                    }
+                }
+
+                try
+                {
+                    if(objectUnderTesting == null)
+                    {
+                        System.out.println("NULL OBJECT");
+                    }
+                    else if(method == null)
+                    {
+                        System.out.println("NULL METHOD");
+                    }
+                    else if(parameters == null)
+                    {
+                        System.out.println("NULL PARAMS");
+                    }
+                    Object o = method.invoke(objectUnderTesting, arguments);
+                    //illegal access exceptions, but for now it's buggy
+
+                    //an alternative option?
+                    //Object o = method.invoke(objectUnderTesting, parameterList);
+                    //outputs.setText(o.toString); ???? possibly to view the output
+                    if(method.getAnnotatedReturnType().toString().equals("void"))
+                    {
+                        outputs.append("Void function completed successfully.\n");
+                    }
+                    else
+                    {
+                        outputs.append(o.toString() + "\n");
+                    }
+
+                }
+                catch (Exception exc)
+                {
+                    outputs.append("You do not have permission to access this.\n");
+                    exc.printStackTrace();
+                }
             }
         });
     }
